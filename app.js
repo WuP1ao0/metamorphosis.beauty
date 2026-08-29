@@ -187,23 +187,25 @@
       ctx.restore();
     }
 
-    // ---- HUD ----
-    ctx.save();
-    ctx.font = "11px 'JetBrains Mono', Consolas, monospace";
-    ctx.fillStyle = "rgba(0,255,136,0.75)";
-    var hud = "SRC accolade_1901.jpg | MODEL yolov8n-face | OBJ " + TARGETS.length + " | FPS " + Math.round(fps);
-    ctx.fillText(hud, 16, H - 16);
+    // ---- HUD（移动端隐藏，避免拥挤）----
+    if (W > 640) {
+      ctx.save();
+      ctx.font = "11px 'JetBrains Mono', Consolas, monospace";
+      ctx.fillStyle = "rgba(0,255,136,0.75)";
+      var hud = "SRC accolade_1901.jpg | MODEL yolov8n-face | OBJ " + TARGETS.length + " | FPS " + Math.round(fps);
+      ctx.fillText(hud, 16, H - 16);
 
-    // REC 闪烁
-    if (Math.floor(t * 1.4) % 2 === 0) {
-      ctx.fillStyle = "#ff3355";
-      ctx.beginPath();
-      ctx.arc(W - 60, 24, 4, 0, Math.PI * 2);
-      ctx.fill();
+      // REC 闪烁
+      if (Math.floor(t * 1.4) % 2 === 0) {
+        ctx.fillStyle = "#ff3355";
+        ctx.beginPath();
+        ctx.arc(W - 60, 24, 4, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.fillStyle = "rgba(232,230,223,0.7)";
+      ctx.fillText("REC", W - 48, 28);
+      ctx.restore();
     }
-    ctx.fillStyle = "rgba(232,230,223,0.7)";
-    ctx.fillText("REC", W - 48, 28);
-    ctx.restore();
 
     requestAnimationFrame(frame);
   }

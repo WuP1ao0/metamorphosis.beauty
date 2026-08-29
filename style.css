@@ -118,7 +118,7 @@ html, body {
 
 .glitch {
   position: relative;
-  font-size: clamp(44px, 9vw, 118px);
+  font-size: clamp(30px, 10vw, 118px);
   font-weight: 700;
   letter-spacing: 0.04em;
   line-height: 0.95;
@@ -194,6 +194,22 @@ html, body {
 .foot-right { color: rgba(0, 255, 136, 0.55); }
 
 @media (max-width: 640px) {
-  .nav-links { gap: 12px; }
-  .foot { flex-direction: column; gap: 6px; }
+  /* 导航栏：品牌一行、链接一行 */
+  .nav {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 12px;
+  }
+  .nav-links {
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+
+  /* 移动端隐藏次要文字 */
+  .hero-tag { display: none; }
+  .hero-term { display: none; }
+  .foot-right { display: none; }
+
+  .foot { justify-content: center; }
 }
