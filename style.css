@@ -104,12 +104,8 @@ html, body {
 .nav-links a::before { content: "/"; color: var(--accent); margin-right: 4px; opacity: 0.7; }
 .nav-links a:hover { color: var(--fg); }
 
-/* 主体：整体推至左下角 */
-.hero {
-  max-width: 900px;
-  margin-top: auto;
-  padding-bottom: clamp(12px, 3vh, 32px);
-}
+/* 主体 */
+.hero { max-width: 900px; }
 
 .hero-tag {
   font-family: var(--mono);
@@ -122,14 +118,12 @@ html, body {
 
 .glitch {
   position: relative;
-  font-size: clamp(26px, 8.5vw, 118px);
+  font-size: clamp(44px, 9vw, 118px);
   font-weight: 700;
   letter-spacing: 0.04em;
   line-height: 0.95;
   color: var(--fg);
   text-shadow: 0 2px 30px rgba(0, 0, 0, 0.6);
-  max-width: 100%;
-  overflow-wrap: break-word;
 }
 
 .glitch::before,
@@ -208,6 +202,17 @@ html, body {
   .hero-tag { display: none; }
   .hero-term { display: none; }
   .foot-right { display: none; }
+
+  /* 移动端：标题移至左下角并缩小防溢出 */
+  .hero {
+    margin-top: auto;
+    padding-bottom: clamp(12px, 3vh, 32px);
+  }
+  .glitch {
+    font-size: clamp(26px, 8.5vw, 118px);
+    max-width: 100%;
+    overflow-wrap: break-word;
+  }
 
   .foot { justify-content: center; }
 }
