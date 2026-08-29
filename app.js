@@ -1,5 +1,5 @@
-/* metamorphosis.beauty — vision.sys v0.3 (glitched)
- * 静态油画《The Accolade》+ 崩坏版 YOLO 识别框覆盖层
+/* metamorphosis.beauty — vision.sys v0.4
+ * 静态油画《The Accolade》+ YOLO 风格识别框覆盖层（温和版，无扫描线）
  * 框坐标为归一化图像坐标（相对原图），由 cover-fit 换算到屏幕。
  */
 (function () {
@@ -29,8 +29,6 @@
     { cx: 0.893, cy: 0.375, w: 0.075, h: 0.058, label: "face", conf: 0.87, color: "magenta" },   // 粉衣青年
     { cx: 0.958, cy: 0.322, w: 0.062, h: 0.058, label: "face", conf: 0.81, color: "red" }        // 右侧侧脸
   ];
-
-  var GLITCH_CHARS = "0123456789ABCDEF#$%&@!?/\\_";
 
   var img = new Image();
   var imgReady = false;
@@ -62,14 +60,12 @@
     mouse.y = -9999;
   });
 
-  // 每个框的运行时状态：高频抖动 / 置信度波动 / 崩坏(glitch)状态
+  // 每个框的运行时状态：轻微抖动 / 置信度波动
   var state = TARGETS.map(function (t, i) {
     return {
       ox: 0, oy: 0, tox: 0, toy: 0,
       seed: i * 137.31,
-      nextJitter: 0,
-      glitchUntil: 0,     // 崩坏结束时间
-      nextGlitch: performance.now() + 800 + Math.random() * 3000
+      nextJitter: 0
     };
   });
 
@@ -120,17 +116,6 @@
     ctx.restore();
   }
 
-  function corrupt(text) {
-    // 随机替换部分字符，制造乱码标签
-    var out = "";
-    for (var i = 0; i < text.length; i++) {
-      out += Math.random() < 0.35
-        ? GLITCH_CHARS[Math.floor(Math.random() * GLITCH_CHARS.length)]
-        : text[i];
-    }
-    return out;
-  }
-
   var lastTime = performance.now();
   var fps = 60;
 
@@ -150,64 +135,27 @@
       var st = state[i];
       var color = COLORS[tg.color];
 
-      // ---- 崩坏触发：随机进入 glitch 状态（150~450ms）----
-      if (now > st.nextGlitch) {
-        st.glitchUntil = now + 150 + Math.random() * 300;
-        st.nextGlitch = now + 1200 + Math.random() * 4500;
-      }
-      var glitching = now < st.glitchUntil;
-
-      // ---- 高频抖动：每 70~160ms 换一个抖动目标，幅度更大 ----
+      // ---- 轻微抖动：每 280~640ms 换一个抖动目标 ----
       if (now > st.nextJitter) {
-        var amp = glitching ? 14 : 7;
-        st.tox = (Math.random() - 0.5) * 2 * amp;
-        st.toy = (Math.random() - 0.5) * 2 * amp;
-        st.nextJitter = now + 70 + Math.random() * 90;
+        st.tox = (Math.random() - 0.5) * 4;
+        st.toy = (Math.random() - 0.5) * 4;
+        st.nextJitter = now + 280 + Math.random() * 360;
       }
-      // 快速趋近（glitch 时几乎瞬移）
-      var lerp = glitching ? 0.55 : 0.28;
-      st.ox += (st.tox - st.ox) * lerp;
-      st.oy += (st.toy - st.oy) * lerp;
+      st.ox += (st.tox - st.ox) * 0.12;
+      st.oy += (st.toy - st.oy) * 0.12;
 
-      // glitch 时偶发整体瞬移
-      if (glitching && Math.random() < 0.25) {
-        st.ox += (Math.random() - 0.5) * 26;
-        st.oy += (Math.random() - 0.5) * 18;
-      }
-
-      // 置信度快速波动 + glitch 时乱跳
-      var conf = tg.conf + Math.sin(t * 3.2 + st.seed) * 0.02;
-      if (glitching) conf = Math.max(0.05, conf + (Math.random() - 0.5) * 0.4);
+      // 置信度轻微波动
+      var conf = tg.conf + Math.sin(t * 0.9 + st.seed) * 0.012;
 
       var bx = rect.dx + (tg.cx - tg.w / 2) * rect.dw + st.ox;
       var by = rect.dy + (tg.cy - tg.h / 2) * rect.dh + st.oy;
       var bw = tg.w * rect.dw;
       var bh = tg.h * rect.dh;
 
-      // glitch 时偶发闪烁（整帧消失）
-      if (glitching && Math.random() < 0.12) continue;
-
-      var alpha = glitching ? 0.55 + Math.random() * 0.45 : 0.85;
-
-      // ---- RGB 撕裂：glitch 时用红/青偏移各描一遍 ----
-      if (glitching) {
-        var split = 3 + Math.random() * 5;
-        drawBox(bx - split, by, bw, bh, "#ff0044", 0.45);
-        drawBox(bx + split, by + (Math.random() - 0.5) * 4, bw, bh, "#00e5ff", 0.45);
-      }
+      var alpha = 0.85;
 
       drawBox(bx, by, bw, bh, color, alpha);
-
-      // 标签：glitch 时乱码 + 位置抖动
-      var text = tg.label + " " + conf.toFixed(2);
-      if (glitching) text = corrupt(text);
-      drawLabel(
-        bx + (glitching ? (Math.random() - 0.5) * 8 : 0),
-        by,
-        text,
-        color,
-        alpha
-      );
+      drawLabel(bx, by, tg.label + " " + conf.toFixed(2), color, alpha);
 
       // 框中心小十字
       ctx.save();
