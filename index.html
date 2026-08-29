@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>metamorphosis.beauty</title>
+<meta name="description" content="metamorphosis.beauty — personal site, under construction.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- 油画背景 + 识别框 canvas 层 -->
+<div class="bg" aria-hidden="true"></div>
+<canvas id="vision"></canvas>
+
+<!-- 扫描线 / 暗角叠加层 -->
+<div class="fx-scanlines" aria-hidden="true"></div>
+<div class="fx-vignette" aria-hidden="true"></div>
+
+<!-- 前景内容 -->
+<main class="overlay">
+  <header class="nav">
+    <span class="nav-brand">metamorphosis<span class="dot">.</span>beauty</span>
+    <nav class="nav-links">
+      <a href="#about">about</a>
+      <a href="#work">work</a>
+      <a href="#blog">blog</a>
+      <a href="#contact">contact</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <p class="hero-tag">// the accolade (1901) — subjects acquired, 5 faces tracked</p>
+    <h1 class="glitch" data-text="METAMORPHOSIS">METAMORPHOSIS</h1>
+    <p class="hero-sub">personal site &middot; under construction &middot; deployed on cloudflare</p>
+    <div class="hero-term">
+      <p><span class="prompt">$</span> whoami</p>
+      <p class="term-out">&gt; a human being, observed &amp; observing</p>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <span>&copy; 2026 metamorphosis.beauty</span>
+    <span class="foot-right">vision.sys v0.2 — E.B. Leighton, public domain</span>
+  </footer>
+</main>
+
+<script src="app.js" defer></script>
+</body>
+</html>
