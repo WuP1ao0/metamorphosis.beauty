@@ -21,8 +21,6 @@
 
   // 识别目标：归一化坐标 (cx, cy, w, h) + 标签 + 基准置信度
   var TARGETS = [
-    { cx: 0.335, cy: 0.545, w: 0.420, h: 0.630, label: "person", conf: 0.97, color: "green" },   // 女王全身
-    { cx: 0.550, cy: 0.750, w: 0.400, h: 0.480, label: "person", conf: 0.94, color: "cyan" },    // 骑士全身
     { cx: 0.405, cy: 0.300, w: 0.100, h: 0.062, label: "face", conf: 0.98, color: "green" },     // 女王面部
     { cx: 0.525, cy: 0.550, w: 0.095, h: 0.065, label: "face", conf: 0.95, color: "cyan" },      // 骑士头部
     { cx: 0.748, cy: 0.315, w: 0.082, h: 0.062, label: "face", conf: 0.91, color: "yellow" },    // 白须老者
