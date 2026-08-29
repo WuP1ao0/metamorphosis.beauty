@@ -185,15 +185,10 @@
       ctx.restore();
     }
 
-    // ---- HUD（移动端隐藏，避免拥挤）----
+    // ---- REC 闪烁（移动端隐藏，避免拥挤）----
     if (W > 640) {
       ctx.save();
       ctx.font = "11px 'JetBrains Mono', Consolas, monospace";
-      ctx.fillStyle = "rgba(0,255,136,0.75)";
-      var hud = "SRC accolade_1901.jpg | MODEL yolov8n-face | OBJ " + TARGETS.length + " | FPS " + Math.round(fps);
-      ctx.fillText(hud, 16, H - 16);
-
-      // REC 闪烁
       if (Math.floor(t * 1.4) % 2 === 0) {
         ctx.fillStyle = "#ff3355";
         ctx.beginPath();
